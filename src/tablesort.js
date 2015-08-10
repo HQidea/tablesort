@@ -76,13 +76,13 @@
           cell;
 
       that.table = el;
-      that.thead = false;
+      that.thead = null;
       that.options = options;
 
       if (el.rows && el.rows.length > 0) {
         if (el.tHead && el.tHead.rows.length > 0) {
           firstRow = el.tHead.rows[el.tHead.rows.length - 1];
-          that.thead = true;
+          that.thead = firstRow;
         } else {
           firstRow = el.rows[0];
         }
@@ -90,7 +90,7 @@
 
       if (!firstRow) return;
 
-      var onClick = function() {
+      that.onClick = function() {
         if (that.current && that.current !== this) {
           that.current.classList.remove('sort-up');
           that.current.classList.remove('sort-down');
@@ -106,7 +106,7 @@
         if (!cell.classList.contains('no-sort')) {
           cell.classList.add('sort-header');
           cell.tabindex = 0;
-          cell.addEventListener('click', onClick, false);
+          cell.addEventListener('click', that.onClick, false);
 
           if (cell.classList.contains('sort-default')) {
             defaultSort = cell;
@@ -237,6 +237,24 @@
       if (this.current !== undefined) {
         this.sortTable(this.current, true);
       }
+    },
+
+    update: function() {
+      var that = this,
+        i,
+        cell;
+
+      if (!that.thead) return;
+
+      for (i = 0; i < that.thead.cells.length; i++) {
+        cell = that.thead.cells[i];
+        if (cell.classList.contains('sort-header')) {
+          cell.classList.remove('sort-header');
+          cell.removeEventListener('click', that.onClick, false);
+        }
+      }
+
+      that.init(that.table, that.options);
     }
   };
 
