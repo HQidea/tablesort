@@ -249,7 +249,7 @@
       for (i = 0; i < that.thead.cells.length; i++) {
         cell = that.thead.cells[i];
         if (cell.classList.contains('sort-header')) {
-          cell.classList.remove('sort-header');
+          cell.classList.remove('sort-header', 'sort-up', 'sort-down');
           cell.removeEventListener('click', that.onClick, false);
         }
       }
